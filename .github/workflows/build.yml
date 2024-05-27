@@ -24,7 +24,8 @@ jobs:
     - name: Install Dependencies
       env:
         GITHUB_PAT: ${{ secrets.WEBR_PAT }}
-      run: Rscript -e "remotes::install_github('ebenmichael/augsynth')"
+      run: |
+        Rscript -e "remotes::install_github('ebenmichael/augsynth')"
 
     - name: Install GeoLift and WebR
       env:
@@ -42,15 +43,11 @@ jobs:
         source ./emsdk_env.sh
 
     - name: Build WebR Package
+      env:
+        EMSDK: ${{ github.workspace }}/emsdk
       run: |
-        source ./emsdk/emsdk_env.sh
+        source $EMSDK/emsdk_env.sh
         Rscript -e "webr::webr_build('GeoLift')"
-
-    - name: Install r-wasm actions
-      uses: r-wasm/actions/setup@v1
-
-    - name: Build WebR binary
-      run: Rscript -e "rwasm::rwasm_binary('GeoLift')"
 
     - name: Deploy to GitHub Pages
       uses: peaceiris/actions-gh-pages@v3
