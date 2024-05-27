@@ -25,11 +25,12 @@ jobs:
         Rscript -e "install.packages('remotes', repos='http://cran.us.r-project.org')"
         Rscript -e "remotes::install_github('ebenmichael/augsynth')"
 
-    - name: Install GeoLift
+    - name: Install GeoLift and WebR
       env:
         GITHUB_PAT: ${{ secrets.WEBR_PAT }}
       run: |
         Rscript -e "remotes::install_github('facebookincubator/GeoLift')"
+        Rscript -e "remotes::install_github('r-wasm/webr')"
 
     - name: Set up Emscripten
       run: |
