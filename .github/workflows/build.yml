@@ -1,0 +1,48 @@
+name: Build and Deploy GeoLift for WebR
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v2
+
+    - name: Set up R
+      uses: r-lib/actions/setup-r@v2
+      with:
+        r-version: 4.1.0
+
+    - name: Install Dependencies
+      run: |
+        install.packages("remotes")
+        remotes::install_github("ebenmichael/augsynth")
+
+    - name: Install GeoLift
+      run: |
+        remotes::install_github("facebookincubator/GeoLift")
+
+    - name: Set up Emscripten
+      run: |
+        curl -O https://s3.amazonaws.com/mozilla-games/emscripten/releases/emsdk-portable.tar.gz
+        tar -xvf emsdk-portable.tar.gz
+        ./emsdk-portable/emsdk update
+        ./emsdk-portable/emsdk install latest
+        ./emsdk-portable/emsdk activate latest
+        source ./emsdk-portable/emsdk_env.sh
+
+    - name: Build WebR Package
+      run: |
+        Rscript -e "webr::webr_build('GeoLift')"
+
+    - name: Deploy to GitHub Pages
+      uses: peaceiris/actions-gh-pages@v3
+      with:
+        github_token: ${{ secrets.GITHUB_TOKEN }}
+        publish_dir: ./GeoLift/build
+        publish_branch: gh-pages
