@@ -19,11 +19,15 @@ jobs:
         r-version: 4.1.0
 
     - name: Install Dependencies
+      env:
+        GITHUB_PAT: ${{ secrets.WEBR_PAT }}
       run: |
         Rscript -e "install.packages('remotes', repos='http://cran.us.r-project.org')"
         Rscript -e "remotes::install_github('ebenmichael/augsynth')"
 
     - name: Install GeoLift
+      env:
+        GITHUB_PAT: ${{ secrets.WEBR_PAT }}
       run: |
         Rscript -e "remotes::install_github('facebookincubator/GeoLift')"
 
