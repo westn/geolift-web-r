@@ -20,12 +20,12 @@ jobs:
 
     - name: Install Dependencies
       run: |
-        install.packages("remotes")
-        remotes::install_github("ebenmichael/augsynth")
+        Rscript -e "install.packages('remotes', repos='http://cran.us.r-project.org')"
+        Rscript -e "remotes::install_github('ebenmichael/augsynth')"
 
     - name: Install GeoLift
       run: |
-        remotes::install_github("facebookincubator/GeoLift")
+        Rscript -e "remotes::install_github('facebookincubator/GeoLift')"
 
     - name: Set up Emscripten
       run: |
